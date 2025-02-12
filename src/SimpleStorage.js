@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css"
 
 const SimpleStorage = () => {
   const [increaseValue, setIncreaseValue] = useState("");
@@ -67,6 +68,8 @@ const SimpleStorage = () => {
   ];
 
   const provider = new ethers.AlchemyProvider("sepolia", apikey);
+  // use JsonRpcProvider if contract is deployed to local network
+  // const provider = new ethers.JsonRpcProvider("http://localhost:8545");
   const wallet = new ethers.Wallet(privateKey, provider);
   const contract = new ethers.Contract(contractAddress, abi, wallet);
 
@@ -111,7 +114,7 @@ const SimpleStorage = () => {
   };
 
   return (
-    <div>
+    <div className="centered-container">
       <h1>Simple Storage</h1>
 
       <input
