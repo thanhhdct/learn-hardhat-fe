@@ -115,7 +115,7 @@ const SimpleStorage = () => {
 
   return (
     <div className="centered-container">
-      <h1>Simple Storage</h1>
+      <h2>Simple Storage</h2>
 
       <input
         type="number"
