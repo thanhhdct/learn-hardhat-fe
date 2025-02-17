@@ -10,7 +10,7 @@ const SimpleStorage = () => {
   const [claimValue, setClaimValue] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+  const contractAddress = process.env.REACT_APP_CONTRACT_COUNTER_ADDRESS;
   const privateKey = process.env.REACT_APP_PRIVATE_KEY;
   const apikey = process.env.REACT_APP_API_KEY;
   const abi = [

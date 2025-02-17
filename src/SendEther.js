@@ -4,15 +4,32 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-const contractAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
-const privateKey =
-  // "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-  "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
+const contractAddress = process.env.REACT_APP_CONTRACT_SEND_ETHER_ADDRESS;
+const privateKey = process.env.REACT_APP_PRIVATE_KEY;
 const abi = [
   {
     inputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+    ],
+    name: "Deposit",
+    type: "event",
   },
   {
     stateMutability: "payable",
@@ -21,6 +38,13 @@ const abi = [
   {
     inputs: [],
     name: "destroy",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "emitEvent",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -62,6 +86,7 @@ const SendEtherWithTransaction = () => {
   const [privateKeyValue, setPrivateKeyValue] = useState("");
   const [claimValue, setClaimValue] = useState("");
   const [ownerAddressValue, setOwnerAddressValue] = useState("");
+  const [eventEmittedNumberValue, setEventEmittedNumberValue] = useState("");
   const [currentAddressValue, setCurrentAddressValue] = useState("");
   const [unitValue, setUnitValue] = useState("Ether");
   const [loading, setLoading] = useState(false);
@@ -135,6 +160,10 @@ const SendEtherWithTransaction = () => {
       toast.error("Error fetching value");
     }
   };
+
+  contract.on("Deposit", (value, from) => {
+    setEventEmittedNumberValue(value);
+  });
 
   return (
     <div className="centered-container">
@@ -211,6 +240,19 @@ const SendEtherWithTransaction = () => {
           Get owner address
         </button>
         <p>Owner Address: {ownerAddressValue}</p>
+      </div>
+
+      <div>
+        <button
+          onClick={async () => {
+            await contract.emitEvent();
+          }}
+          disabled={loading}
+          style={{ margin: "10px" }}
+        >
+          Emit event
+        </button>
+        <p>Event emitted: {eventEmittedNumberValue}</p>
       </div>
 
       <ToastContainer />
